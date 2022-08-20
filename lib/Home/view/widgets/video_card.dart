@@ -27,6 +27,7 @@ class VideoCard extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => PlayerPage(
+              videoId: videos[index]['id'],
               videoURL: videos[index]['videoPath'],
             ),
           ),
