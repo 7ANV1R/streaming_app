@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:streaming_app/Player/view/player_page.dart';
 import 'package:streaming_app/core/ui_helper.dart';
 
 class VideoCard extends StatelessWidget {
@@ -22,6 +23,14 @@ class VideoCard extends StatelessWidget {
     return InkWell(
       onTap: () {
         log(videos[index]['title']);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PlayerPage(
+              videoURL: videos[index]['videoPath'],
+            ),
+          ),
+        );
       },
       child: Padding(
         padding: const EdgeInsets.all(16.0),

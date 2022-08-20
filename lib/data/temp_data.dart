@@ -11,7 +11,7 @@ List<Map<String, dynamic>> videoData = [
   },
   <String, dynamic>{
     'title': '১ মিনিটে তড়িৎ তাণ্ডব বিজ্ঞানবাক্স',
-    'thumbnail': 'assets/thumbnail/lightning_rampage_OnnoRokom Bigganbaksho.jpg',
-    'videoPath': 'assets/video_assets/lightning_rampage_OnnoRokom Bigganbaksho.mp4',
+    'thumbnail': 'assets/thumbnail/lightning_rampage_OnnoRokom_Bigganbaksho.jpg',
+    'videoPath': 'assets/video_assets/lightning_rampage_OnnoRokom_Bigganbaksho.mp4',
   },
 ];
