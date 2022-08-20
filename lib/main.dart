@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'Home/home.dart';
 
@@ -15,9 +16,22 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'P1-Streaming App',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.purple,
+        appBarTheme: const AppBarTheme(
+          systemOverlayStyle: SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            statusBarBrightness: Brightness.light,
+            statusBarIconBrightness: Brightness.dark,
+            systemNavigationBarIconBrightness: Brightness.dark,
+          ),
+          color: Colors.white,
+          elevation: 0,
+          shadowColor: Colors.transparent,
+          foregroundColor: Colors.black,
+          centerTitle: true,
+        ),
       ),
-      home: const HomePage(title: 'Streaming App for OP'),
+      home: const HomePage(),
     );
   }
 }
