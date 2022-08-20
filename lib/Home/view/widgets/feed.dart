@@ -21,7 +21,10 @@ class _FeedState extends State<Feed> {
       physics: const BouncingScrollPhysics(),
       itemCount: videos.length,
       itemBuilder: (context, index) {
-        return VideoCard(size: size, videos: videos, textTheme: textTheme, index: index);
+        return Padding(
+          padding: const EdgeInsets.only(top: 16),
+          child: VideoCard(size: size, videos: videos, textTheme: textTheme, index: index),
+        );
       },
     );
   }

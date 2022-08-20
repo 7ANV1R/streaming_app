@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:streaming_app/Player/view/player_page.dart';
 
 import 'Home/home.dart';
 

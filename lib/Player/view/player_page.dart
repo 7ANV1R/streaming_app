@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
@@ -21,19 +23,51 @@ class _PlayerPageState extends State<PlayerPage> {
   @override
   void initState() {
     super.initState();
-    setState(() {
-      _initVideoPlayer();
-    });
+    _initVideoPlayer();
+  }
+
+  void _checkVideo() {
+    if (videoPlayerController.value.position == const Duration(seconds: 0, minutes: 0, hours: 0)) {
+      log('video Started');
+      videoPlayerController.pause();
+    }
+
+    if (videoPlayerController.value.position == videoPlayerController.value.duration) {
+      log('video Ended');
+    }
   }
 
   void _initVideoPlayer() async {
     videoPlayerController = VideoPlayerController.asset(widget.videoURL);
-    await videoPlayerController.initialize();
+    await videoPlayerController.initialize().then((value) => {
+          // videoPlayerController.addListener(() {
+          //   setState(() {
+          //     log(videoPlayerController.value.position.inSeconds.toString());
+          //     if (videoPlayerController.value.isInitialized &&
+          //         videoPlayerController.value.position.inSeconds == 20) {
+          //       if (videoPlayerController.value.isPlaying) {
+          //         videoPlayerController.pause();
+          //       }
+          //     }
+          //   });
+          // })
+        });
 
     chewieController = ChewieController(
       videoPlayerController: videoPlayerController,
       autoPlay: true,
-      looping: true,
+      looping: false,
+      allowedScreenSleep: false,
+      allowFullScreen: true,
+      showControls: true,
+      errorBuilder: (context, errorMessage) {
+        return Center(
+          child: Text(
+            errorMessage,
+            style: const TextStyle(color: Colors.white),
+          ),
+        );
+      },
     );
     setState(() {});
   }
@@ -50,7 +84,7 @@ class _PlayerPageState extends State<PlayerPage> {
     return Scaffold(
       body: chewieController != null
           ? Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20),
+              padding: const EdgeInsets.symmetric(vertical: 100),
               child: Chewie(
                 controller: chewieController!,
               ),
