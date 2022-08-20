@@ -1,15 +1,16 @@
-import 'dart:developer';
-
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
+import 'package:streaming_app/data/service/storage_services.dart';
 import 'package:video_player/video_player.dart';
 
 class PlayerPage extends StatefulWidget {
   const PlayerPage({
     Key? key,
+    required this.videoId,
     required this.videoURL,
   }) : super(key: key);
 
+  final int videoId;
   final String videoURL;
 
   @override
@@ -26,31 +27,22 @@ class _PlayerPageState extends State<PlayerPage> {
     _initVideoPlayer();
   }
 
-  void _checkVideo() {
-    if (videoPlayerController.value.position == const Duration(seconds: 0, minutes: 0, hours: 0)) {
-      log('video Started');
-      videoPlayerController.pause();
-    }
-
-    if (videoPlayerController.value.position == videoPlayerController.value.duration) {
-      log('video Ended');
+  Duration _reStoreLastPosition() {
+    final playbackValue = UserSimplePreferences.getPlaybackValue(widget.videoId);
+    if (playbackValue == null) {
+      return Duration.zero;
+    } else {
+      return Duration(milliseconds: playbackValue);
     }
   }
 
   void _initVideoPlayer() async {
     videoPlayerController = VideoPlayerController.asset(widget.videoURL);
     await videoPlayerController.initialize().then((value) => {
-          // videoPlayerController.addListener(() {
-          //   setState(() {
-          //     log(videoPlayerController.value.position.inSeconds.toString());
-          //     if (videoPlayerController.value.isInitialized &&
-          //         videoPlayerController.value.position.inSeconds == 20) {
-          //       if (videoPlayerController.value.isPlaying) {
-          //         videoPlayerController.pause();
-          //       }
-          //     }
-          //   });
-          // })
+          videoPlayerController.addListener(() {
+            UserSimplePreferences.setPlaybackValue(
+                videoPlayerController.value.position.inMilliseconds, widget.videoId);
+          })
         });
 
     chewieController = ChewieController(
@@ -60,6 +52,7 @@ class _PlayerPageState extends State<PlayerPage> {
       allowedScreenSleep: false,
       allowFullScreen: true,
       showControls: true,
+      startAt: _reStoreLastPosition(),
       errorBuilder: (context, errorMessage) {
         return Center(
           child: Text(
