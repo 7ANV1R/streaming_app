@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:streaming_app/Home/view/widgets/video_card.dart';
+import 'package:streaming_app/data/temp_data.dart';
 
 class Feed extends StatefulWidget {
   const Feed({
@@ -12,10 +14,14 @@ class Feed extends StatefulWidget {
 class _FeedState extends State<Feed> {
   @override
   Widget build(BuildContext context) {
+    var textTheme = Theme.of(context).textTheme;
+    var size = MediaQuery.of(context).size;
+    List videos = videoData;
     return ListView.builder(
-      itemCount: 3,
+      physics: const BouncingScrollPhysics(),
+      itemCount: videos.length,
       itemBuilder: (context, index) {
-        return Container();
+        return VideoCard(size: size, videos: videos, textTheme: textTheme, index: index);
       },
     );
   }
