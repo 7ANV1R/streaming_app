@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:streaming_app/Player/view/player_page.dart';
 import 'package:streaming_app/core/ui_helper.dart';

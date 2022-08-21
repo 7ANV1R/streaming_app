@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:streaming_app/data/service/storage_services.dart';
@@ -39,10 +41,12 @@ class _PlayerPageState extends State<PlayerPage> {
   void _initVideoPlayer() async {
     videoPlayerController = VideoPlayerController.asset(widget.videoURL);
     await videoPlayerController.initialize().then((value) => {
-          videoPlayerController.addListener(() {
-            UserSimplePreferences.setPlaybackValue(
-                videoPlayerController.value.position.inMilliseconds, widget.videoId);
-          })
+          videoPlayerController.addListener(
+            () {
+              UserSimplePreferences.setPlaybackValue(
+                  videoPlayerController.value.position.inMilliseconds, widget.videoId);
+            },
+          )
         });
 
     chewieController = ChewieController(
@@ -87,4 +91,25 @@ class _PlayerPageState extends State<PlayerPage> {
             ),
     );
   }
+
+  Future openDialog() => showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Do you like this video?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('YES'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('NO'),
+            ),
+          ],
+        ),
+      );
 }
