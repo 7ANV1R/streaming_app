@@ -27,7 +27,7 @@ class StatsCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
               image: DecorationImage(
                 fit: BoxFit.cover,
-                image: AssetImage(
+                image: NetworkImage(
                   videos[index]['thumbnail'],
                 ),
               ),

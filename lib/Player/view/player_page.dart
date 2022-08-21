@@ -32,13 +32,13 @@ class _PlayerPageState extends State<PlayerPage> {
   }
 
   String? convertUrlToId(String url, {bool trimWhitespaces = true}) {
-    assert(url.isNotEmpty);
-    String _url;
+    // assert(url.isNotEmpty);
+    String localUrl;
     if (!url.contains('http') && (url.length == 11)) return url;
     if (trimWhitespaces) {
-      _url = url.trim();
+      localUrl = url.trim();
     } else {
-      _url = url;
+      localUrl = url;
     }
 
     for (final exp in [
@@ -46,7 +46,7 @@ class _PlayerPageState extends State<PlayerPage> {
       RegExp(r'^https:\/\/(?:www\.|m\.)?youtube(?:-nocookie)?\.com\/embed\/([_\-a-zA-Z0-9]{11}).*$'),
       RegExp(r'^https:\/\/youtu\.be\/([_\-a-zA-Z0-9]{11}).*$')
     ]) {
-      final RegExpMatch? match = exp.firstMatch(_url);
+      final RegExpMatch? match = exp.firstMatch(localUrl);
       if (match != null && match.groupCount >= 1) return match.group(1);
     }
 

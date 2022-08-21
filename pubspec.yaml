@@ -39,5 +39,3 @@ flutter:
   uses-material-design: true
   assets:
     - assets/
-    - assets/thumbnail/
-    - assets/video_assets/
