@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:streaming_app/data/service/storage_services.dart';
 import 'package:video_player/video_player.dart';
+import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 class PlayerPage extends StatefulWidget {
   const PlayerPage({
@@ -29,6 +31,38 @@ class _PlayerPageState extends State<PlayerPage> {
     _initVideoPlayer();
   }
 
+  String? convertUrlToId(String url, {bool trimWhitespaces = true}) {
+    assert(url.isNotEmpty);
+    String _url;
+    if (!url.contains('http') && (url.length == 11)) return url;
+    if (trimWhitespaces) {
+      _url = url.trim();
+    } else {
+      _url = url;
+    }
+
+    for (final exp in [
+      RegExp(r'^https:\/\/(?:www\.|m\.)?youtube\.com\/watch\?v=([_\-a-zA-Z0-9]{11}).*$'),
+      RegExp(r'^https:\/\/(?:www\.|m\.)?youtube(?:-nocookie)?\.com\/embed\/([_\-a-zA-Z0-9]{11}).*$'),
+      RegExp(r'^https:\/\/youtu\.be\/([_\-a-zA-Z0-9]{11}).*$')
+    ]) {
+      final RegExpMatch? match = exp.firstMatch(_url);
+      if (match != null && match.groupCount >= 1) return match.group(1);
+    }
+
+    return null;
+  }
+
+  Future<String> _extractVideoUrl() async {
+    final extractor = YoutubeExplode();
+    final videoId = convertUrlToId(widget.videoURL);
+    final streamManifest = await extractor.videos.streamsClient.getManifest(videoId);
+    final streamInfo = streamManifest.muxed.withHighestBitrate();
+    extractor.close();
+    log(streamInfo.url.toString());
+    return streamInfo.url.toString();
+  }
+
   Duration _reStoreLastPosition() {
     final playbackValue = UserSimplePreferences.getPlaybackValue(widget.videoId);
     if (playbackValue == null) {
@@ -39,7 +73,10 @@ class _PlayerPageState extends State<PlayerPage> {
   }
 
   void _initVideoPlayer() async {
-    videoPlayerController = VideoPlayerController.asset(widget.videoURL);
+    var url = await _extractVideoUrl();
+    log('url $url');
+
+    videoPlayerController = VideoPlayerController.network(url);
     await videoPlayerController.initialize().then((value) => {
           videoPlayerController.addListener(
             () {
