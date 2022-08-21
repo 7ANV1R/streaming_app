@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:streaming_app/Home/view/widgets/feed.dart';
+import 'package:streaming_app/Stats/stats_page.dart';
 import 'package:streaming_app/core/ui_helper.dart';
 
 class HomeView extends StatefulWidget {
@@ -23,7 +24,7 @@ class _HomePageState extends State<HomeView> {
         leading: IconButton(
           onPressed: () {},
           icon: const Icon(
-            Icons.menu_rounded,
+            Icons.more_vert_outlined,
           ),
         ),
         actions: [
@@ -41,20 +42,39 @@ class _HomePageState extends State<HomeView> {
         children: [
           Padding(
             padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
-            child: RichText(
-              text: TextSpan(
-                text: 'Let\'s\n',
-                style: textTheme.headline6,
-                children: <TextSpan>[
-                  TextSpan(
-                    text: 'Discover',
-                    style: textTheme.headline5!.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.purple,
-                    ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                RichText(
+                  text: TextSpan(
+                    text: 'Let\'s\n',
+                    style: textTheme.headline6,
+                    children: <TextSpan>[
+                      TextSpan(
+                        text: 'Discover',
+                        style: textTheme.headline5!.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.purple,
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const StatsPage(),
+                      ),
+                    );
+                  },
+                  icon: const Icon(
+                    Icons.insights,
+                  ),
+                ),
+              ],
             ),
           ),
           kVerticalSpaceM,
