@@ -22,7 +22,6 @@ class VideoCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        log(videos[index]['title']);
         Navigator.push(
           context,
           MaterialPageRoute(
