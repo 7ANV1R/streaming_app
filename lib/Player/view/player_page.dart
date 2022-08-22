@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +31,6 @@ class _PlayerPageState extends State<PlayerPage> {
   }
 
   String? convertUrlToId(String url, {bool trimWhitespaces = true}) {
-    // assert(url.isNotEmpty);
     String localUrl;
     if (!url.contains('http') && (url.length == 11)) return url;
     if (trimWhitespaces) {
@@ -59,7 +57,6 @@ class _PlayerPageState extends State<PlayerPage> {
     final streamManifest = await extractor.videos.streamsClient.getManifest(videoId);
     final streamInfo = streamManifest.muxed.withHighestBitrate();
     extractor.close();
-    log(streamInfo.url.toString());
     return streamInfo.url.toString();
   }
 
@@ -68,20 +65,29 @@ class _PlayerPageState extends State<PlayerPage> {
     if (playbackValue == null) {
       return Duration.zero;
     } else {
-      return Duration(milliseconds: playbackValue);
+      return Duration(seconds: playbackValue);
     }
   }
 
   void _initVideoPlayer() async {
     var url = await _extractVideoUrl();
-    log('url $url');
+    String lastLoggedTime = ""; //for avoiding multiple listening
 
     videoPlayerController = VideoPlayerController.network(url);
     await videoPlayerController.initialize().then((value) => {
           videoPlayerController.addListener(
             () {
-              UserSimplePreferences.setPlaybackValue(
-                  videoPlayerController.value.position.inMilliseconds, widget.videoId);
+              //for avoiding multiple listening
+              if (lastLoggedTime != videoPlayerController.value.position.inSeconds.toString()) {
+                lastLoggedTime = videoPlayerController.value.position.inSeconds.toString(); //<--save it here
+
+                UserSimplePreferences.setPlaybackValue(
+                    videoPlayerController.value.position.inSeconds, widget.videoId);
+                if (lastLoggedTime == 10.toString()) {
+                  videoPlayerController.pause();
+                  openDialog();
+                }
+              }
             },
           )
         });
@@ -137,12 +143,14 @@ class _PlayerPageState extends State<PlayerPage> {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
+                videoPlayerController.play();
               },
               child: const Text('YES'),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
+                videoPlayerController.play();
               },
               child: const Text('NO'),
             ),
