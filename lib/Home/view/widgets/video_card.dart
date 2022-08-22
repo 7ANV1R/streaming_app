@@ -31,10 +31,14 @@ class VideoCard extends StatelessWidget {
         );
       },
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.only(
+          left: 16.0,
+          right: 16.0,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            kVerticalSpaceM,
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: Stack(
@@ -67,21 +71,16 @@ class VideoCard extends StatelessWidget {
               style: textTheme.headline6,
             ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    const Icon(
-                      Icons.thumb_up,
-                      size: 16,
-                    ),
-                    kHorizontalSpaceXS,
-                    Text(
-                      '865 likes',
-                      style: textTheme.bodyText2,
-                    ),
-                  ],
+                Expanded(
+                  child: Text(
+                    "Posted 1 years ago",
+                    style: textTheme.bodyText2,
+                  ),
                 ),
-                kHorizontalSpaceS,
+                // view
                 Row(
                   children: [
                     const Icon(
@@ -90,13 +89,18 @@ class VideoCard extends StatelessWidget {
                     ),
                     kHorizontalSpaceXS,
                     Text(
-                      '1200 views',
+                      '97k views',
                       style: textTheme.bodyText2,
                     ),
                   ],
                 ),
               ],
             ),
+            kVerticalSpaceL,
+            Container(
+              height: 1,
+              color: Colors.black12,
+            )
           ],
         ),
       ),

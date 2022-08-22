@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
@@ -69,6 +70,24 @@ class _PlayerPageState extends State<PlayerPage> {
     }
   }
 
+  void _incrementLike() {
+    var currentLikeCount = UserSimplePreferences.getLikeStatsValue(widget.videoId);
+    if (currentLikeCount == null) {
+      UserSimplePreferences.setLikeStatsValue(1, widget.videoId);
+    } else {
+      UserSimplePreferences.setLikeStatsValue(currentLikeCount + 1, widget.videoId);
+    }
+  }
+
+  void _incrementDislike() {
+    var currentDislikeCount = UserSimplePreferences.getDislikeStatsValue(widget.videoId);
+    if (currentDislikeCount == null) {
+      UserSimplePreferences.setDislikeStatsValue(1, widget.videoId);
+    } else {
+      UserSimplePreferences.setDislikeStatsValue(currentDislikeCount + 1, widget.videoId);
+    }
+  }
+
   void _initVideoPlayer() async {
     var url = await _extractVideoUrl();
     String lastLoggedTime = ""; //for avoiding multiple listening
@@ -83,7 +102,7 @@ class _PlayerPageState extends State<PlayerPage> {
 
                 UserSimplePreferences.setPlaybackValue(
                     videoPlayerController.value.position.inSeconds, widget.videoId);
-                if (lastLoggedTime == 10.toString()) {
+                if (lastLoggedTime == 60.toString()) {
                   videoPlayerController.pause();
                   openDialog();
                 }
@@ -142,15 +161,21 @@ class _PlayerPageState extends State<PlayerPage> {
           actions: [
             TextButton(
               onPressed: () {
+                _incrementLike();
+                log('liked');
                 Navigator.of(context).pop();
                 videoPlayerController.play();
+                setState(() {});
               },
               child: const Text('YES'),
             ),
             TextButton(
               onPressed: () {
+                _incrementDislike();
+                log('disliked');
                 Navigator.of(context).pop();
                 videoPlayerController.play();
+                setState(() {});
               },
               child: const Text('NO'),
             ),
