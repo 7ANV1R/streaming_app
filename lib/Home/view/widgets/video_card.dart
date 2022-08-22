@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:streaming_app/Player/view/player_page.dart';
 import 'package:streaming_app/core/ui_helper.dart';
@@ -49,7 +47,7 @@ class VideoCard extends StatelessWidget {
                       image: DecorationImage(
                         fit: BoxFit.cover,
                         colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.25), BlendMode.darken),
-                        image: AssetImage(
+                        image: NetworkImage(
                           videos[index]['thumbnail'],
                         ),
                       ),

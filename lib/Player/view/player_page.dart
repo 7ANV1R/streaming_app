@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:streaming_app/data/service/storage_services.dart';
 import 'package:video_player/video_player.dart';
+import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 class PlayerPage extends StatefulWidget {
   const PlayerPage({
@@ -27,22 +30,66 @@ class _PlayerPageState extends State<PlayerPage> {
     _initVideoPlayer();
   }
 
+  String? convertUrlToId(String url, {bool trimWhitespaces = true}) {
+    String localUrl;
+    if (!url.contains('http') && (url.length == 11)) return url;
+    if (trimWhitespaces) {
+      localUrl = url.trim();
+    } else {
+      localUrl = url;
+    }
+
+    for (final exp in [
+      RegExp(r'^https:\/\/(?:www\.|m\.)?youtube\.com\/watch\?v=([_\-a-zA-Z0-9]{11}).*$'),
+      RegExp(r'^https:\/\/(?:www\.|m\.)?youtube(?:-nocookie)?\.com\/embed\/([_\-a-zA-Z0-9]{11}).*$'),
+      RegExp(r'^https:\/\/youtu\.be\/([_\-a-zA-Z0-9]{11}).*$')
+    ]) {
+      final RegExpMatch? match = exp.firstMatch(localUrl);
+      if (match != null && match.groupCount >= 1) return match.group(1);
+    }
+
+    return null;
+  }
+
+  Future<String> _extractVideoUrl() async {
+    final extractor = YoutubeExplode();
+    final videoId = convertUrlToId(widget.videoURL);
+    final streamManifest = await extractor.videos.streamsClient.getManifest(videoId);
+    final streamInfo = streamManifest.muxed.withHighestBitrate();
+    extractor.close();
+    return streamInfo.url.toString();
+  }
+
   Duration _reStoreLastPosition() {
     final playbackValue = UserSimplePreferences.getPlaybackValue(widget.videoId);
     if (playbackValue == null) {
       return Duration.zero;
     } else {
-      return Duration(milliseconds: playbackValue);
+      return Duration(seconds: playbackValue);
     }
   }
 
   void _initVideoPlayer() async {
-    videoPlayerController = VideoPlayerController.asset(widget.videoURL);
+    var url = await _extractVideoUrl();
+    String lastLoggedTime = ""; //for avoiding multiple listening
+
+    videoPlayerController = VideoPlayerController.network(url);
     await videoPlayerController.initialize().then((value) => {
-          videoPlayerController.addListener(() {
-            UserSimplePreferences.setPlaybackValue(
-                videoPlayerController.value.position.inMilliseconds, widget.videoId);
-          })
+          videoPlayerController.addListener(
+            () {
+              //for avoiding multiple listening
+              if (lastLoggedTime != videoPlayerController.value.position.inSeconds.toString()) {
+                lastLoggedTime = videoPlayerController.value.position.inSeconds.toString(); //<--save it here
+
+                UserSimplePreferences.setPlaybackValue(
+                    videoPlayerController.value.position.inSeconds, widget.videoId);
+                if (lastLoggedTime == 10.toString()) {
+                  videoPlayerController.pause();
+                  openDialog();
+                }
+              }
+            },
+          )
         });
 
     chewieController = ChewieController(
@@ -87,4 +134,27 @@ class _PlayerPageState extends State<PlayerPage> {
             ),
     );
   }
+
+  Future openDialog() => showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Do you like this video?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                videoPlayerController.play();
+              },
+              child: const Text('YES'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                videoPlayerController.play();
+              },
+              child: const Text('NO'),
+            ),
+          ],
+        ),
+      );
 }

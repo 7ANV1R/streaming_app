@@ -1,20 +1,20 @@
 List<Map<String, dynamic>> videoData = [
   <String, dynamic>{
     'id': 1,
-    'title': 'কেন আমরা এই ভিডিওগুলো করছি?',
-    'thumbnail': 'assets/thumbnail/OP_intro.jpg',
-    'videoPath': 'assets/video_assets/OP_intro.mp4',
+    'title': 'ছোট্ট একটা গল্প বলব- মাহমুদুল হাসান সোহাগ |',
+    'thumbnail': 'https://img.youtube.com/vi/guKScX8YXLU/maxresdefault.jpg',
+    'videoPath': 'https://youtube.com/watch?v=guKScX8YXLU',
   },
   <String, dynamic>{
     'id': 2,
     'title': 'ভালো রেজাল্ট করার ৩ টি টিপস',
-    'thumbnail': 'assets/thumbnail/3_tips_for_good_results_OnnoRokom_Bigganbaksho.jpg',
-    'videoPath': 'assets/video_assets/3_tips_for_good_results_OnnoRokom_Bigganbaksho.mp4',
+    'thumbnail': 'https://img.youtube.com/vi/M_Fvv3gff8g/maxresdefault.jpg',
+    'videoPath': 'https://youtube.com/watch?v=M_Fvv3gff8g',
   },
   <String, dynamic>{
     'id': 3,
-    'title': '১ মিনিটে তড়িৎ তাণ্ডব বিজ্ঞানবাক্স',
-    'thumbnail': 'assets/thumbnail/lightning_rampage_OnnoRokom_Bigganbaksho.jpg',
-    'videoPath': 'assets/video_assets/lightning_rampage_OnnoRokom_Bigganbaksho.mp4',
+    'title': 'কোক আর দুধের লড়াই | পরীক্ষণ ৩',
+    'thumbnail': 'https://img.youtube.com/vi/3eTYpYES92I/maxresdefault.jpg',
+    'videoPath': 'https://youtube.com/watch?v=3eTYpYES92I',
   },
 ];
