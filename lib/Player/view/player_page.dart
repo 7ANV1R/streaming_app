@@ -55,6 +55,10 @@ class _PlayerPageState extends State<PlayerPage> {
   Future<String> _extractVideoUrl() async {
     final extractor = YoutubeExplode();
     final videoId = convertUrlToId(widget.videoURL);
+
+    if (videoId == null) {
+      return widget.videoURL;
+    }
     final streamManifest = await extractor.videos.streamsClient.getManifest(videoId);
     final streamInfo = streamManifest.muxed.withHighestBitrate();
     extractor.close();

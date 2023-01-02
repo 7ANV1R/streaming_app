@@ -3,7 +3,7 @@ List<Map<String, dynamic>> videoData = [
     'id': 1,
     'title': 'ছোট্ট একটা গল্প বলব- মাহমুদুল হাসান সোহাগ |',
     'thumbnail': 'https://img.youtube.com/vi/guKScX8YXLU/maxresdefault.jpg',
-    'videoPath': 'https://youtube.com/watch?v=guKScX8YXLU',
+    'videoPath': 'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4',
   },
   <String, dynamic>{
     'id': 2,
